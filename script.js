@@ -1,10 +1,20 @@
 let intentos = 6;
+/*
 let diccionario = ["APPLE", "AMBER", "BEACH", "BRAVE", "CLEAN", "CHAIR", "DREAM", "DRINK", "EARTH",
     "EMAIL", "FROST", "FLAME", "GHOST", "GREAT", "HOUSE", "HEART", "INERT", "IMAGE", "JOINT", "JUDGE"];
 const palabra = diccionario[Math.floor(Math.random() * diccionario.length)];
-
+*/
+let palabra;
 const button = document.getElementById("guess-button");
 button.addEventListener("click", intentar);
+
+fetch("https://random-word-api.vercel.app/api?words=10&length=5&type=uppercase")
+    .then(response => response.json())
+    .then(response => {
+    palabra = response[0]
+    console.log(palabra)
+})
+    .catch(err => console.error(err));
 
 function intentar() {
     const INTENTO = leerIntento();
