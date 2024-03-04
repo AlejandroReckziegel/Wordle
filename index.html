@@ -3,17 +3,28 @@
 
 <head>
     <title>Wordle PPY</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
     <meta charset="UTF-8" />
-    <script src="script.js" defer></script>
+    <script src="./script.js" defer></script>
 </head>
 
 <body>
-    <h1>Wordle PPY</h1>
-    <input type="text" id="guess-input" maxlength="5">
-    <button id="guess-button">Intentar</button>
-    <div id="grid"></div>
-    <p id="guesses"></p>
+    <div id="container">
+        <div id="input-area">
+            <div id="content">
+                <h1>Wordle PPY</h1>
+                <input type="text" id="guess-input" onkeydown="return /[a-zA-Z]/i.test(event.key)"
+                maxlength="5">
+                <button id="guess-button" disabled>Intentar</button>
+                <button id="play-again-button">Jugar de nuevo</button>
+            </div>
+        </div>
+        <div id="attempts">
+                <h1 id="attempts-left">Tienes 6 intentos</h1>
+                <div id="grid"></div>
+                <p id="guesses"></p>
+        </div>
+    </div>
 </body>
 
 </html>

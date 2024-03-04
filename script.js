@@ -1,26 +1,37 @@
-let intentos = 6;
-/*
-let diccionario = ["APPLE", "AMBER", "BEACH", "BRAVE", "CLEAN", "CHAIR", "DREAM", "DRINK", "EARTH",
-    "EMAIL", "FROST", "FLAME", "GHOST", "GREAT", "HOUSE", "HEART", "INERT", "IMAGE", "JOINT", "JUDGE"];
-const palabra = diccionario[Math.floor(Math.random() * diccionario.length)];
-*/
 let palabra;
-const button = document.getElementById("guess-button");
-button.addEventListener("click", intentar);
-
-fetch("https://random-word-api.vercel.app/api?words=10&length=5&type=uppercase")
+fetch("https://random-word-api.vercel.app/api?words=1&length=5&type=uppercase")
     .then(response => response.json())
     .then(response => {
-    palabra = response[0]
-    console.log(palabra)
-})
-    .catch(err => console.error(err));
+        palabra = response[0]
+    })
+    .catch(error => {
+        let diccionario = ["APPLE", "AMBER", "BEACH", "BRAVE", "CLEAN", "CHAIR", "DREAM", "DRINK",
+            "EARTH", "EMAIL", "FROST", "FLAME", "GHOST", "GREAT", "HOUSE", "HEART", "INERT", "IMAGE",
+            "JOINT", "JUDGE"]
+        palabra = diccionario[Math.floor(Math.random() * diccionario.length)]
+    });
+let intentos = 6;
+const INTENTAR = document.getElementById("guess-button");
+const NUEVOJUEGO = document.getElementById("play-again-button");
+const INPUT = document.getElementById("guess-input");
 
-function intentar() {
-    const INTENTO = leerIntento();
-    if (INTENTO === palabra) {
-        terminar("<h1>GANASTE! :D</h1>")
+INPUT.addEventListener("input", () => {
+    if (INPUT.value.length == 5) {
+        INTENTAR.disabled = false;
+    } else {
+        INTENTAR.disabled = true;
     }
+});
+
+INTENTAR.addEventListener("click", () => {
+    let intento = INPUT.value.toUpperCase();
+    intentos--
+    if (intento === palabra) {
+        terminar("GANASTE!");
+    } else if (intentos == 0) {
+        terminar("Perdiste... la palabra era: " + palabra);
+    }
+    document.getElementById("attempts-left").innerHTML = "Intentos restantes: " + intentos;
 
     const GRID = document.getElementById("grid");
     const ROW = document.createElement("div");
@@ -28,37 +39,37 @@ function intentar() {
     for (let i in palabra) {
         const SPAN = document.createElement("span");
         SPAN.className = "letter";
-        if (INTENTO[i] === palabra[i]) {
-            SPAN.innerHTML = INTENTO[i];
-            SPAN.style.backgroundColor = "#79b851";
-        } else if (palabra.includes(INTENTO[i])) {
-            SPAN.innerHTML = INTENTO[i];
-            SPAN.style.backgroundColor = "#f3c237";
+        if (intento[i] === palabra[i]) {
+            SPAN.innerHTML = intento[i];
+            SPAN.style.color = "#00ff00";
+            SPAN.style.border = "3px solid #00ff00";
+            SPAN.style.background = "#005000";
+        } else if (palabra.includes(intento[i])) {
+            SPAN.innerHTML = intento[i];
+            SPAN.style.color = "#ffff00";
+            SPAN.style.border = "3px solid #ffff00";
+            SPAN.style.background = "#505000";
         } else {
-            SPAN.innerHTML = INTENTO[i];
-            SPAN.style.backgroundColor = "#a4aec4";
+            SPAN.innerHTML = intento[i];
+            SPAN.style.color = "#f0f0f0";
+            SPAN.style.border = "3px solid #f0f0f0";
+            SPAN.style.background = "#505050";
         }
-        ROW.appendChild(SPAN)
+        ROW.appendChild(SPAN);
     }
-    GRID.appendChild(ROW)
+    GRID.appendChild(ROW);
 
-    intentos--
-    if (intentos == 0) {
-        terminar("<h1>PERDISTE! :(</h1>")
-    }
-}
-
-function leerIntento() {
-    let intento = document.getElementById("guess-input");
-    intento = intento.value;
-    intento = intento.toUpperCase();
-    return intento;
-}
+    INPUT.value = "";
+    INTENTAR.disabled = true;
+});
 
 function terminar(mensaje) {
-    const INPUT = document.getElementById("guess-input");
-    INPUT.disabled = true;
-    button.disabled = true;
-    let contenedor = document.getElementById('guesses');
-    contenedor.innerHTML = mensaje;
+    document.getElementById("guess-input").disabled = true;
+    document.getElementById('guesses').innerHTML = mensaje;
+    INTENTAR.style.display = "none";
+    NUEVOJUEGO.style.display = "block";
 }
+
+NUEVOJUEGO.addEventListener("click", () => {
+    location.reload();
+});
